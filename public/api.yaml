@@ -1,0 +1,281 @@
+openapi: 3.0.0
+info:
+  title: SocialSync API
+  description: SocialSync is a realtime chat platform.
+  version: 1.0.0
+
+servers:
+  - url: http://127.0.0.1:8000/api
+    description: local server
+  - url: https://producation.app/api
+    description: production server
+
+paths:
+  /register:
+    post:
+      summary: Register a user.
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: luka
+                last_name:
+                  type: string
+                  example: kurdadze
+                email:
+                  type: string
+                  example: lukakurdadze@gmail.com
+                password:
+                  type: string
+                  example: password
+      responses:
+        '200':
+          description: Register a user.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User successfully registered!
+  /login:
+    post:
+      summary: login a user.
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: lukakurdadze@gmail.com
+                password:
+                  type: string
+                  example: password
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: 6|h8tmW92Nm6sooFAAHusLB3OlZqO7kKQpNhNg7oih01a0e92b
+        401:
+          description: Invalid Credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid Credentials
+  /logout:
+    post:
+      summary: logout a user.
+      tags:
+        - auth
+      responses:
+        '200':
+          description: user successfully logged out.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User successfully logged out!
+  /forget-password:
+    post:
+      summary: Send email to user for resetting email.
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: lukakurdadze@gmail.com
+      responses:
+        '200':
+          description: Sending email to user for resetting password was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email sent successfully
+  /reset-password:
+    post:
+      summary: Send Request to reset password.
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: as78dgs78dash3487awoken7f832trio3j298ryu23fjlksdj
+                email:
+                  type: string
+                  example: lukakurdadze@gmail.com
+                password:
+                  type: string
+                  example: password
+                password_confirmation:
+                  type: string
+                  example: password
+      responses:
+        '200':
+          description: resetting password was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password reset successfully
+        400:
+          description: Either token is invalid or expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid token
+  /user:
+    get:
+      summary: Retrieve user data object.
+      tags:
+        - user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Retrieve a user object.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: luka
+                  last_name:
+                    type: string
+                    example: kurdadze
+                  email:
+                    type: string
+                    example: lukakurdadze@gmail.com
+                  email_verified_at:
+                    type: string
+                    example: 2024-01-01 00:00:00
+                  picture:
+                    type: string
+                    example: profile-picture.png
+                  created_at:
+                    type: string
+                    example: 2024-01-01 00:00:00
+                  updated_at:
+                    type: string
+                    example: 2024-01-01 00:00:00
+
+#
+#  /friends:
+#    get:
+#      summary: Retrieve user's friends.
+#      tags:
+#        - user
+#      security:
+#        - bearerAuth: []
+#      responses:
+#        '200':
+#          description: Retrieve user's friends.
+#          content:
+#            application/json:
+#              schema:
+#                type: array
+#                items:
+#                  type: object
+#                  properties:
+#                    id:
+#                      type: integer
+#                      example: 2
+#                    name:
+#                      type: string
+#                      example: luka
+#                    last_name:
+#                      type: string
+#                      example: kurdadze
+#                    email:
+#                      type: string
+#                      example: lukakurdadze@gmail.com
+#                    email_verified_at:
+#                        type: string
+#                        example: 2024-01-01 00:00:00
+#  /add-friend:
+#    post:
+#      summary: Add a friend.
+#      tags:
+#        - user
+#      security:
+#        - bearerAuth: []
+#      requestBody:
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              type: object
+#              properties:
+#                friend_id:
+#                  type: integer
+#                  example: 2
+#      responses:
+#        '200':
+#          description: Friend added successfully.
+#          content:
+#            application/json:
+#              schema:
+#                type: object
+#                properties:
+#                  message:
+#                    type: string
+#                    example: Friend added successfully
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
